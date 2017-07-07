@@ -1,0 +1,33 @@
+server:
+  port: 8193
+
+management:
+  context-path: '/admin8193'
+
+turbine:
+  app-config: api-gateway,feign-hystrix-user-service
+  aggregator:
+    clusterConfig: prontera
+  cluster-name-expression: metadata['cluster']
+  instanceUrlSuffix:
+    prontera: 'admin/hystrix.stream'
+
+eureka:
+  client:
+   service-url:
+      defaultZone: 'http://peer1:8761/eureka/,http://peer2:8762/eureka/'
+  instance:
+    metadata-map:
+      management:
+        context-path: ${management.context-path}
+      health:
+        path: ${management.context-path}/health
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
+spring:
+  application:
+    name: hystrix-dashboard-turbine
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true

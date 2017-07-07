@@ -1,0 +1,31 @@
+server:
+  port: 8761                    # 指定该Eureka实例的端口
+
+management:
+  context-path: '/admin8761'
+
+spring:
+  application:
+    name: server1
+
+eureka:
+  instance:
+    hostname: peer1       # 指定该Eureka实例的主机名
+    prefer-ip-address: false
+    metadata-map:
+      cluster: prontera
+      management:
+        context-path: ${management.context-path}
+      health:
+        path: ${management.context-path}/health
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://peer2:8762/eureka/
+      #defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+# 参考文档：http://projects.spring.io/spring-cloud/docs/1.0.3/spring-cloud.html#_standalone_mode
+# 参考文档：http://my.oschina.net/buwei/blog/618756

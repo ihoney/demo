@@ -1,0 +1,34 @@
+server:
+  port: 7020
+
+management:
+  context-path: '/admin7020'
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://peer1:8761/eureka/,http://peer2:8762/eureka/'
+    registry-fetch-interval-seconds: 5
+  instance:
+    metadata-map:
+      cluster: prontera
+      management:
+        context-path: ${management.context-path}
+      health:
+        path: ${management.context-path}/health
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
+    prefer-ip-address: false
+    lease-renewal-interval-in-seconds: 10
+spring:
+  application:
+    name: 'spring-boot-admin'
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+  boot:
+    admin:
+      turbine:
+        url: 'http://hystrix_dashboard:8193/turbine.stream'
+        clusters: 'prontera'
